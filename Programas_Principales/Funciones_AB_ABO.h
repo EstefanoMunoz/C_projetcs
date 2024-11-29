@@ -42,14 +42,14 @@ int Maximo(int nodo_1, int nodo_2)
         return nodo_2;
 }
 
-int Altura(NODO *raiz)
+int Altura(NODO *arbol)
 {
     // Retorna la longitud de la rama mas larga del arbol, mas 1. Aplica para AB y ABO.
 
-    if (raiz == NULL)
+    if (arbol == NULL)
         return 0;
     else
-        return Maximo(Altura(raiz->izq), Altura(raiz->der)) + 1;
+        return Maximo(Altura(arbol->izq), Altura(arbol->der)) + 1;
 }
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -105,17 +105,17 @@ NODO *Insertar_ABO(NODO* arbol, int nodo)
     return arbol;
 }
 
-bool Esta_en_AB(NODO *raiz, int nodo)
+bool Esta_en_AB(NODO *arbol, int nodo)
 {
     // Retorna True si el nodo ingresado esta en el arbol, y False en caso contrario. Aplica para AB y ABO.
 
-    if (raiz == NULL)
+    if (arbol == NULL)
         return false;
-    if (raiz->info == nodo)
+    if (arbol->info == nodo)
         return true;
 
     else
-        return Esta_en_AB(raiz->izq, nodo) || Esta_en_AB(raiz->der, nodo);
+        return Esta_en_AB(arbol->izq, nodo) || Esta_en_AB(arbol->der, nodo);
 }
 
 NODO *Buscar_Nodo(NODO *arbol, int nodo)
@@ -133,20 +133,20 @@ NODO *Buscar_Nodo(NODO *arbol, int nodo)
             return Buscar_Nodo(arbol->der, nodo);
 }
 
-int Peso(NODO *raiz)
+int Peso(NODO *arbol)
 {
     // Retorna la cantidad de nodos que tiene un arbol. Aplica para AB y ABO.
 
-    if (raiz == NULL)
+    if (arbol == NULL)
         return 0;
     
     else
-        return 1 + Peso(raiz->izq) + Peso(raiz->der);
+        return 1 + Peso(arbol->izq) + Peso(arbol->der);
 }
 
 int Menor(NODO *arbol)
 {
-    // Retorna el menor nodo existente del arbol. Aplica para ABO.
+    // Retorna el menor nodo existente del arbol. Aplica para AB y ABO.
 
     if (arbol != NULL)
         if (arbol->izq != NULL && arbol->izq->info < arbol->info)
@@ -159,7 +159,7 @@ int Menor(NODO *arbol)
 
 int Mayor(NODO *arbol)
 {
-    // Retorna el mayor nodo existente del arbol. Aplica para ABO.
+    // Retorna el mayor nodo existente del arbol. Aplica para AB y ABO.
 
     if (arbol != NULL)
         if (arbol->der != NULL && arbol->der->info > arbol->info)
@@ -170,7 +170,7 @@ int Mayor(NODO *arbol)
         return -1; // Solo en el caso de que el arbol este vacio.
 }
 
-int Nivel_De_Un_NODOAB(NODO *arbol, int nodo) // nodo = 13
+int Nivel_De_Un_NODOAB(NODO *arbol, int nodo)
 {
     // Retorna el nivel de un nodo en un arbol. Aplica para AB y ABO.
 
@@ -246,7 +246,7 @@ bool Es_Raiz_Padre(NODO *arbol, int nodo)
         return false;
 }
 
-void Padre_Nodo(NODO *arbol, int nodo) // nodo = 13
+void Padre_Nodo(NODO *arbol, int nodo)
 {
     // Imprime el padre de un nodo. Aplica para AB y ABO.
     
@@ -261,7 +261,7 @@ void Padre_Nodo(NODO *arbol, int nodo) // nodo = 13
             Padre_Nodo(arbol->der, nodo);
 }
 
-void Antecesores_Nodo(NODO *arbol, int nodo) // nodo = 64
+void Antecesores_Nodo(NODO *arbol, int nodo)
 {
     // Imprime los antecesores de un nodo. Aplica para AB y ABO.
 
@@ -292,7 +292,7 @@ void hijos_Nodo_AB(NODO *arbol, int nodo)
         printf("\nHijo Derecho: %i", aux->der->info);
 }
 
-/*void Descendientes_Nodo_v1(NODO *arbol, int nodo) // nodo = 64
+/*void Descendientes_Nodo_v1(NODO *arbol, int nodo)
 {
     // Retorna los descendientes de un nodo. Aplica para un AB y ABO.
     // La función: - La idea de esta función, es que al principio se posicione/llegue al nodo que se quiere obtener sus descendientes.
@@ -320,7 +320,7 @@ void hijos_Nodo_AB(NODO *arbol, int nodo)
         return;
 }*/
 
-void Descendientes_Nodo_v2(NODO *subarbol) // nodo = 20
+void Descendientes_Nodo_v2(NODO *subarbol)
 {
     // Retorna los descendientes de un nodo. Aplica para un AB y ABO.
     // La función: - Asume que el arbol recibido es el nodo pero en su versión de subarbol.
@@ -337,6 +337,21 @@ void Descendientes_Nodo_v2(NODO *subarbol) // nodo = 20
         printf(" %i", subarbol->der->info);
         Descendientes_Nodo_v2(subarbol->der);
     }
+}
+
+void DescendientesNodo(NODO *arbol, int nodo)
+{
+    if (arbol->info == nodo)
+    {
+        printf("\nDescendientes: ");
+        InOrden(arbol->izq);
+        InOrden(arbol->der);
+        return;
+    }
+    if (arbol->izq != NULL && Esta_en_AB(arbol->izq, nodo))
+        DescendientesNodo(arbol->izq, nodo);
+    else
+        DescendientesNodo(arbol->der, nodo);
 }
 
 void Analisis_AB(NODO* arbol)
@@ -447,7 +462,7 @@ void Analisis_AB(NODO* arbol)
 
 // Referente a funciónes de un ABO.
 
-int Nivel_De_Un_NODOABO(NODO *arbol, int nodo) // nodo = 17
+int Nivel_De_Un_NODOABO(NODO *arbol, int nodo)
 {
     // Retorna el nivel de un nodo en un arbol. Solo aplica para ABO.
     
@@ -463,7 +478,7 @@ int Nivel_De_Un_NODOABO(NODO *arbol, int nodo) // nodo = 17
         return 0;
 }
 
-void Padre_Nodo_ABO(NODO *arbol, int nodo)  // nodo = 13
+void Padre_Nodo_ABO(NODO *arbol, int nodo)
 {
     // Imprime el padre de un nodo. Aplica solo para ABO.
 
@@ -558,6 +573,72 @@ void Descendientes_Nodo_ABO(NODO *arbol, int nodo)  // Me llamo la antención el
         Descendientes_Nodo_ABO(arbol->der, nodo);
 }
 
+int Suma_Imp_Cant(NODO *arbol, bool opcion)
+{
+    // Si "opcion" es false, retornara la suma de los descendientes impares de un nodo (tipo arbol o subarbol). En caso contrario, si
+    // "opcion" es true, retornara la cantidad de impares descendientes de un nodo (tipo arbol o subarbol).
+
+    if (arbol == NULL)
+        return 0;
+    
+    if (!opcion)
+    {
+        if (arbol->info % 2 != 0)
+            return arbol->info + Suma_Imp_Cant(arbol->izq, false) + Suma_Imp_Cant(arbol->der, false);
+        else
+            return Suma_Imp_Cant(arbol->izq, false) + Suma_Imp_Cant(arbol->der, false);
+    }
+    
+    else
+    {
+        if (arbol->info % 2 != 0)
+            return 1 + Suma_Imp_Cant(arbol->izq, true) + Suma_Imp_Cant(arbol->der, true);
+        else
+            return Suma_Imp_Cant(arbol->izq, true) + Suma_Imp_Cant(arbol->der, true);
+    }
+}
+
+float Mean_DescendientesImpares(NODO *arbol, int valor)
+{
+    // Calcula el promedio de los descendientes impares de un nodo. Aplica solo para ABO.
+
+    if (arbol == NULL)
+        return 0;
+
+    if (arbol->info == valor)
+    {
+        int suma_impares = Suma_Imp_Cant(arbol->izq, false) + Suma_Imp_Cant(arbol->der, false);
+        int cant = Suma_Imp_Cant(arbol->izq, true) + Suma_Imp_Cant(arbol->der, true);
+        
+        return (float)suma_impares / cant;
+    }
+
+    else
+    {
+        if (valor < arbol->info)
+            return Mean_DescendientesImpares(arbol->izq, valor);
+        else
+            return Mean_DescendientesImpares(arbol->der, valor);
+    }
+}
+
+float Promedio_Descendientes(NODO *arbol, int valor)
+{
+    // Calcula el promedio de los descendientes de un nodo. Aplica solo para ABO.
+
+    if (arbol->info == valor)
+        return (float)Suma_Nodos(arbol) / Peso(arbol);
+
+    else
+    {
+        if (valor < arbol->info)
+            Promedio_Descendientes(arbol->izq, valor);
+        else
+            Promedio_Descendientes(arbol->der, valor);
+    }
+}
+
+
 void Analisis_ABO(NODO *arbol)
 {
     int nodo;
@@ -649,4 +730,6 @@ void Analisis_ABO(NODO *arbol)
         printf("\nEs una hoja (sin hijos ni descendientes)");
     else
         Descendientes_Nodo_ABO(arbol, nodo);
+
+    printf("\nEl promedio de los descendientes impares es: %.2f", Mean_DescendientesImpares(arbol, nodo));
 }
